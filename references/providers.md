@@ -1,10 +1,10 @@
 # 音乐平台接入协议
 
-核对日期 2026-09-04。调用前读取本机对应官方 Skill；上游更新可能改变接口，发生不匹配应停止并重新核对，不猜参数。本包已附 QQ、网易官方原版 Skill，固定版本见 vendor/lock.json，许可证及集成边界见 THIRD_PARTY_NOTICES.md。优先按 PulseBeat 的个人授权、密钥保密与本地分析要求使用选定功能。
+核对日期 2026-09-04。调用前读取本机对应官方 Skill；上游更新可能改变接口，发生不匹配应停止并重新核对，不猜参数。本包已附酷狗、QQ、网易原版 Skill，固定版本见 vendor/lock.json，许可证及集成边界见 THIRD_PARTY_NOTICES.md。优先按 PulseBeat 的个人授权、密钥保密与本地分析要求使用选定功能。
 
 ## 酷狗
 
-使用已安装 `kugou-skill`，`kugou-cli auth status` 检查登录，必要时由用户完成 `kugou-cli auth login`。凭证留在酷狗 CLI 自己的配置目录。
+先读取随包 `vendor/kugou/SKILL.md`（npm `@kg-ai/kugou-skill@0.0.13` 文档快照，与当前已验证 CLI 版本一致），无需另外下载 Skill 文档。运行时仍使用本机 `kugou-cli`；若未安装，可运行 `npm install -g @kg-ai/kugou-skill@0.0.13`。随后用 `kugou-cli auth status` 检查登录，必要时由用户完成 `kugou-cli auth login`。凭证留在酷狗 CLI 自己的配置目录。上游登录输出可能包含 secret；仅向用户展示二维码、等待/成功状态，不把完整登录响应或凭证写入对话、报告或仓库。
 
 ```sh
 python3 <pulsebeat-skill>/scripts/kugou_collect.py --days 7 --out <private-output>/kugou.json

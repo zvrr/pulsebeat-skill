@@ -49,5 +49,23 @@
       "netease-music-cli/LICENSE.txt": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
       "ncm-cli-setup/scripts/install_mpv.py": "4898fdeccda6e55ac48ea2e21e2a3405c97277187e33d908cc8220612bc9af59"
     }
+  },
+  "kugou": {
+    "package": "@kg-ai/kugou-skill",
+    "version": "0.0.13",
+    "registry": "https://registry.npmjs.org",
+    "tarball": "https://registry.npmjs.org/@kg-ai/kugou-skill/-/kugou-skill-0.0.13.tgz",
+    "integrity": "sha512-rnJun4raYQU5jke99QqdZtuU1oH+vwprlHpPtSyOTxzWwVBhoNMmBfLRId70xmwtD3CXEvttrRtpZjGQ90n/dg==",
+    "license": "MIT",
+    "files": [
+      "SKILL.md",
+      "README.md",
+      "package.json"
+    ],
+    "sha256": {
+      "SKILL.md": "e1bba4caeee09c66e807d394a8d58b2c82abc5f45e3a0cadfd2a126e930fed2e",
+      "README.md": "a6c658970daecd5be15a0c1072bc0cdec2d37dce9d48ac19431087f531f748fd",
+      "package.json": "bb3c6245577cd25b8e9a3673e6282e10c389a5ce82881d08820ddb6b6bb46e0a"
+    }
   }
 }

@@ -31,7 +31,7 @@ If the selected language is English, read [English workflow](references/workflow
 
 ## 执行流程
 
-1. 确定所需期间，默认最近可用数据；用户没指定音乐平台时先用 PulseBeat 中已有酷狗数据，报告其他平台的缺失。读取 [平台接入](references/providers.md)，按用户实际选择读取随包官方音乐 Skill：QQ 为 `vendor/qqmusic/qqmusic/SKILL.md`；网易为 `vendor/netease/netease-music-cli/SKILL.md` 与 `vendor/netease/netease-music-assistant/SKILL.md`。先遵循本技能的隐私边界：不执行上游打印/索要密钥步骤，不把健康请求路由到音乐远端 AI，不为普通用户创建开发应用，不自动播放、建单或定时推送。原版仅作选定音乐操作参考，详见 THIRD_PARTY_NOTICES.md。Spotify 读取 [接入说明](references/spotify.md)，不冒称有官方个人音乐源码 Skill。
+1. 确定所需期间，默认最近可用数据；用户没指定音乐平台时先用 PulseBeat 中已有酷狗数据，报告其他平台的缺失。读取 [平台接入](references/providers.md)，按用户实际选择读取随包音乐 Skill：酷狗为 `vendor/kugou/SKILL.md`；QQ 为 `vendor/qqmusic/qqmusic/SKILL.md`；网易为 `vendor/netease/netease-music-cli/SKILL.md` 与 `vendor/netease/netease-music-assistant/SKILL.md`。先遵循本技能的隐私边界：不执行上游打印/索要密钥步骤，不把健康请求路由到音乐远端 AI，不为普通用户创建开发应用，不自动播放、建单或定时推送。原版仅作选定音乐操作参考，详见 THIRD_PARTY_NOTICES.md。Spotify 读取 [接入说明](references/spotify.md)，不冒称有官方个人音乐源码 Skill。
 2. `python3 <skill>/scripts/pulsebeat.py status` 只显示配置是否存在，不显示密钥。首次或过期时运行：
 
    ```sh

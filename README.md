@@ -71,12 +71,12 @@ python3 scripts/demo_report.py
 | 平台 | 当前能力 | 授权或限制 |
 | --- | --- | --- |
 | WHOOP | 通过 PulseBeat 获取周期、恢复、睡眠和运动记录 | 邀请加入服务，个人网页授权 |
-| 酷狗音乐 | 本机 CLI 同步及已有 PulseBeat 数据；累计本地日历史 | 本机已授权的酷狗 Skill/CLI；接口窗口与限流可能限制覆盖 |
+| 酷狗音乐 | 内置酷狗 Skill 文档；本机 CLI 同步及累计日历史 | 本机已授权的酷狗 Skill/CLI；接口窗口与限流可能限制覆盖 |
 | QQ 音乐 | 官方个人日报适配 | 使用官方 Skill 的个人 API Key；日期时区须确认 |
 | 网易云音乐 | 内置官方 CLI/助手/安装 Skill；已有授权的收藏与偏好分析 | 开发配置尚缺时标记不可用或导入，不让普通用户创建应用 |
 | Spotify | 官方应用使用指引、官方扩展听歌历史本地导入 | 未找到官方个人听歌源码 Skill；导入按结束日统计，暂不自动计算健康关联系数 |
 
-平台接入细节见 [providers.md](references/providers.md)。可组合 [QQ 音乐官方 Skills](https://github.com/tencentmusic/qqmusic-skills) 和 [网易云音乐官方 Skills](https://github.com/NetEase/skills)。两家的官方 Skill 源码已随包放在 `vendor/`，无需再寻找或下载，固定提交与文件校验值见 `vendor/lock.json`，原始许可证见 [第三方声明](THIRD_PARTY_NOTICES.md)。平台账号授权仍由本人完成，凭证不随包分发。
+平台接入细节见 [providers.md](references/providers.md)。可组合 [QQ 音乐官方 Skills](https://github.com/tencentmusic/qqmusic-skills) 和 [网易云音乐官方 Skills](https://github.com/NetEase/skills)。酷狗（`vendor/kugou/SKILL.md`，npm 版本 0.0.13）、QQ 和网易的 Skill 文档已随包放在 `vendor/`，无需再寻找或下载，固定版本/提交与文件校验值见 `vendor/lock.json`，原始许可证见 [第三方声明](THIRD_PARTY_NOTICES.md)。平台账号授权仍由本人完成，凭证不随包分发。
 
 ## 中英文环境
 

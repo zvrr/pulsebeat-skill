@@ -44,12 +44,12 @@ Ask the Agent:
 
 | Provider | Included | Personal access |
 | --- | --- | --- |
-| Kugou Music | Collector and local history archive | Authorized kugou-cli or data already in PulseBeat |
+| Kugou Music | Bundled Skill document, collector and local history archive | Authorized kugou-cli or data already in PulseBeat |
 | QQ Music | Official source Skill plus daily-report adapter | Personal QQMUSIC_API_KEY configured locally |
 | NetEase Cloud Music | Official CLI, assistant and setup Skills; favorite import | Reuse an existing authorized CLI; unavailable developer setup is not delegated to ordinary users |
 | Spotify | Official app guidance plus local Extended Streaming History importer | Use the official host app where available, or import your account's export |
 
-Official QQ and NetEase source snapshots are included under vendor/, with original Apache-2.0 licenses and pinned commits/checksums. See [third-party notices](THIRD_PARTY_NOTICES.md). No official personal-listening Spotify source Skill was identified; its official Ads plugin has a different purpose and is not bundled. See [Spotify integration](references/spotify.md). Bundling instructions does not replace personal account authorization.
+Kugou Skill documents from npm @kg-ai/kugou-skill@0.0.13 are included at vendor/kugou/SKILL.md, alongside QQ and NetEase snapshots. Kugou declares MIT in its original package metadata; QQ and NetEase retain their Apache-2.0 license files. Versions, commits and checksums are pinned in vendor/lock.json. The Kugou CLI runtime and personal login remain separate requirements. See [third-party notices](THIRD_PARTY_NOTICES.md). No official personal-listening Spotify source Skill was identified; its official Ads plugin has a different purpose and is not bundled. See [Spotify integration](references/spotify.md). Bundling instructions does not replace personal account authorization.
 
 ## Language
 
