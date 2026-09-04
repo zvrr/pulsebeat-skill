@@ -63,7 +63,13 @@ def sync(args):
         if report.get('source')!='netease' or report.get('evidenceType')!='favorites' or not isinstance(report.get('songs'),list): raise ValueError('Invalid NetEase favorites export')
         save(run/'netease.json',report)
         if not ncm.exists() or stamp(report)>=stamp(read(ncm)): save(ncm,report)
+    spotify=root/'music'/'spotify.json'
+    if getattr(args,'spotify',None):
+        from spotify_import import validate
+        report=read(args.spotify);validate(report)
+        save(run/'spotify.json',report)
+        if not spotify.exists() or stamp(report)>=stamp(read(spotify)): save(spotify,report)
     save(root/'current.json',fresh)
-    manifest={'schema':'pulsebeat.local-sync.v1','completedAt':now(),'accountRef':ref,'current':str((root/'current.json').resolve()),'snapshot':str(run.resolve()),'qq':[str(p.resolve()) for p in sorted(qq_dir.glob('*.json'))],'netease':str(ncm.resolve()) if ncm.exists() else None,'failures':failures,'status':'partial' if failures else 'complete','counts':{k:len(v) for k,v in fresh['sources'].items()}}
+    manifest={'schema':'pulsebeat.local-sync.v1','completedAt':now(),'accountRef':ref,'current':str((root/'current.json').resolve()),'snapshot':str(run.resolve()),'qq':[str(p.resolve()) for p in sorted(qq_dir.glob('*.json'))],'netease':str(ncm.resolve()) if ncm.exists() else None,'spotify':str(spotify.resolve()) if spotify.exists() else None,'failures':failures,'status':'partial' if failures else 'complete','counts':{k:len(v) for k,v in fresh['sources'].items()}}
     save(root/'sync.json',manifest)
     print('Local sync: '+str((root/'sync.json').resolve()));print('Status: '+manifest['status']);return manifest

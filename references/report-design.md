@@ -41,3 +41,7 @@
 设计参考：
 https://www.whoop.com/us/en/
 https://www.apple.com/health/
+
+## Language / 语言
+
+先运行 locale，insights.json 增加 language（en 或 zh-CN），interpretation.md 与结构化解读使用同一语言。analyze 和 html 传入同一个 --lang。渲染器只翻译界面文案，不翻译用户的 AI 解读；切换语言须由 Agent 重写解读。模板为同一套版式，HTML lang 属性及分享卡同步变化。上游原始字段、歌名和艺人名不翻译。

@@ -1,6 +1,6 @@
 # 音乐平台接入协议
 
-核对日期 2026-09-04。调用前读取本机对应官方 Skill；上游更新可能改变接口，发生不匹配应停止并重新核对，不猜参数。PulseBeat 不打包第三方 Skill 源码，采用依赖组合。
+核对日期 2026-09-04。调用前读取本机对应官方 Skill；上游更新可能改变接口，发生不匹配应停止并重新核对，不猜参数。本包已附 QQ、网易官方原版 Skill，固定版本见 vendor/lock.json，许可证及集成边界见 THIRD_PARTY_NOTICES.md。优先按 PulseBeat 的个人授权、密钥保密与本地分析要求使用选定功能。
 
 ## 酷狗
 
@@ -18,7 +18,7 @@ python3 <pulsebeat-skill>/scripts/kugou_collect.py --days 7 --out <private-outpu
 官方配置页：https://y.qq.com/n/ryqq_v2/qqmusic_skills
 接口依据：https://github.com/tencentmusic/qqmusic-skills/blob/main/qqmusic/me.md
 
-启用官方 `qqmusic` Skill。个人 API Key 置于 `QQMUSIC_API_KEY` 环境变量，由用户在本机配置；只检查是否存在，**不要执行 echo 打印密钥**。不把密钥写入对话或命令字面量。包装器固定只向 https://a.y.qq.com 发送 Key，不跟随重定向。
+读取随包 `vendor/qqmusic/qqmusic/SKILL.md` 和 `me.md`，无需另外寻找 Skill。个人 API Key 置于 `QQMUSIC_API_KEY` 环境变量，由用户在本机配置；只检查是否存在，**不要执行 echo 打印密钥**。不把密钥写入对话或命令字面量。包装器固定只向 https://a.y.qq.com 发送 Key，不跟随重定向。
 
 ```sh
 python3 <pulsebeat-skill>/scripts/pulsebeat.py qq-report --date 2026-09-02 --out <private-output>/qq-2026-09-02.json
@@ -42,7 +42,7 @@ python3 <pulsebeat-skill>/scripts/pulsebeat.py qq-report --date 2026-09-02 --out
 官方仓库：https://github.com/NetEase/skills （各 Skill LICENSE.txt 为 Apache-2.0）
 依赖 CLI：https://www.npmjs.com/package/@music163/ncm-cli
 
-组合已安装的 `netease-music-cli`、`netease-music-assistant`，复用本机官方 CLI 配置，再引导个人账号授权。若缺少官方开发者配置，不要求普通用户注册开发者或填写 appId/privateKey；标记该平台暂不可直接同步，使用本人已有导出或等待服务提供者提供完整官方授权入口。不要把该缺口伪装成已经接通。
+读取随包 `vendor/netease/netease-music-cli/SKILL.md`、`vendor/netease/netease-music-assistant/SKILL.md`，组合两者，复用本机官方 CLI 配置，再引导个人账号授权。若缺少官方开发者配置，不要求普通用户注册开发者或填写 appId/privateKey；标记该平台暂不可直接同步，使用本人已有导出或等待服务提供者提供完整官方授权入口。不要把该缺口伪装成已经接通。
 
 ```sh
 ncm-cli login --background
@@ -67,3 +67,7 @@ ncm-cli commands
 Codex：将 pulsebeat 文件夹置入 ~/.codex/skills/，重新开启任务以加载。WorkBuddy：技能 → 添加技能 → 上传技能 → 导入本地技能包，启用。其他 Agent：导入同一 SKILL.md 文件夹并允许 Python 3.10+ 执行。没有 Python 或没有官方音乐认证，明确报告缺失能力，不声称已接通。
 
 WorkBuddy 官方说明：https://www.codebuddy.cn/docs/workbuddy/From-Beginner-to-Expert-Guide/Function-Description/Skills-Market
+
+## Spotify
+
+见 [Spotify 官方入口与本地导入](spotify.md)。官方 App 与源码 Skill 是两种分发形式，不自动替用户安装不相关的 Spotify Ads 工具。

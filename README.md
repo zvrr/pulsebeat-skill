@@ -1,5 +1,7 @@
 # PulseBeat Skill
 
+简体中文 · [English](README.en.md)
+
 在 Codex、WorkBuddy 等 Agent 中分析自己的 WHOOP 健康与音乐数据，生成结论清晰、可离线打开的 HTML 报告。
 
 PulseBeat 提供账号授权和数据读取；本 Skill 在本机保存历史、计算指标，由当前 Agent 撰写解读。使用者无需配置 Cloudflare、部署后端或创建 WHOOP 开发应用。**公开 Skill 不等于开放注册：在线服务目前需要邀请。**
@@ -42,7 +44,7 @@ WorkBuddy 或其他 Agent：克隆仓库，将包含 `SKILL.md` 的整个文件�
 python3 scripts/demo_report.py
 ```
 
-在浏览器打开 `data/template-demo/index.html`。所有演示数值来自确定性公式，不代表任何人的身体状态。演示输出默认被 Git 忽略。
+在浏览器打开 `data/template-demo/en/index.html` 或 `data/template-demo/zh-CN/index.html`（按检测语言生成）。可分别运行 `python3 scripts/demo_report.py --lang en` 和 `--lang zh-CN` 预览两种语言。所有演示数值来自确定性公式，不代表任何人的身体状态。演示输出默认被 Git 忽略。
 
 ## 数据来源
 
@@ -51,9 +53,32 @@ python3 scripts/demo_report.py
 | WHOOP | 通过 PulseBeat 获取周期、恢复、睡眠和运动记录 | 邀请加入服务，个人网页授权 |
 | 酷狗音乐 | 本机 CLI 同步及已有 PulseBeat 数据；累计本地日历史 | 本机已授权的酷狗 Skill/CLI；接口窗口与限流可能限制覆盖 |
 | QQ 音乐 | 官方个人日报适配 | 使用官方 Skill 的个人 API Key；日期时区须确认 |
-| 网易云音乐 | 已授权的收藏数据导入与偏好分析 | 收藏不等于播放历史；缺少现成个人授权时标记不可用，不要求普通用户创建开发应用 |
+| 网易云音乐 | 内置官方 CLI/助手/安装 Skill；已有授权的收藏与偏好分析 | 开发配置尚缺时标记不可用或导入，不让普通用户创建应用 |
+| Spotify | 官方应用使用指引、官方扩展听歌历史本地导入 | 未找到官方个人听歌源码 Skill；导入按结束日统计，暂不自动计算健康关联系数 |
 
-平台接入细节见 [providers.md](references/providers.md)。可组合 [QQ 音乐官方 Skills](https://github.com/tencentmusic/qqmusic-skills) 和 [网易云音乐官方 Skills](https://github.com/NetEase/skills)。这些第三方项目的代码和凭证不随本仓库分发。
+平台接入细节见 [providers.md](references/providers.md)。可组合 [QQ 音乐官方 Skills](https://github.com/tencentmusic/qqmusic-skills) 和 [网易云音乐官方 Skills](https://github.com/NetEase/skills)。两家的官方 Skill 源码已随包放在 `vendor/`，无需再寻找或下载，固定提交与文件校验值见 `vendor/lock.json`，原始许可证见 [第三方声明](THIRD_PARTY_NOTICES.md)。平台账号授权仍由本人完成，凭证不随包分发。
+
+## 中英文环境
+
+默认跟随电脑的界面语言：macOS 读取 AppleLanguages，Windows 读取 UI Culture，Linux 读取 locale。中文映射为简体中文，其余语言回退英文；检测失败也回退英文。可以使用 `PULSEBEAT_LANG=zh-CN` / `en`，或在任意命令末尾加 `--lang zh-CN` / `--lang en` 手动指定，命令参数优先。
+
+```sh
+python3 scripts/pulsebeat.py locale
+python3 scripts/demo_report.py --lang en
+python3 scripts/demo_report.py --lang zh-CN
+```
+
+Agent 回复、分析解读、HTML 界面与分享卡使用同一语言；歌名和艺人名保留原文。切换报告语言时 Agent 需重新生成对应语言的解读。静态 Skill 列表名称使用双语，宿主不支持动态元信息时仍可识别；上游原版 Skill 文件保留原文。界面语言不改变统计时区。
+
+## Spotify 本地导入
+
+使用 Spotify 账号隐私页面导出的扩展听歌历史，无需开发者应用。详见 [Spotify 接入说明](references/spotify.md)。
+
+```sh
+python3 scripts/pulsebeat.py spotify-import --files ~/Downloads/Streaming_History_Audio_0.json --timezone Asia/Shanghai --out ~/PulseBeat-private/spotify.json
+```
+
+时区须依据本人实际历史确认，不能从系统语言猜测。同步与分析时加入 `--spotify ~/PulseBeat-private/spotify.json`；脚本不会上传这些文件。
 
 ## 本地工作流
 

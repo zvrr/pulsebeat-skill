@@ -1,0 +1,53 @@
+{
+  "qqmusic": {
+    "repo": "tencentmusic/qqmusic-skills",
+    "commit": "2ddf885da49ed820ba171ebea607588e63249ae1",
+    "files": [
+      "LICENSE",
+      "README.md",
+      "qqmusic/SKILL.md",
+      "qqmusic/assistant.md",
+      "qqmusic/charts.md",
+      "qqmusic/discover.md",
+      "qqmusic/me.md",
+      "qqmusic/playlists.md",
+      "qqmusic/version.md"
+    ],
+    "sha256": {
+      "LICENSE": "71357e9fec20c783a2926fd25b661806cde39666484c3764f296a2e1484c0c94",
+      "README.md": "41011fcfa9aea20311c430b0985a2b11ff840d9fc67ad4f4169528ca9135a18e",
+      "qqmusic/version.md": "8244661b85e7c3fa5e3f548219dd72073838b242d428fda206b12f2e38a00cf5",
+      "qqmusic/me.md": "5cd0f5b2aaf3b54900032a0c71cb9b58966e0ab38213542dcdd9568bec3c1c6c",
+      "qqmusic/charts.md": "ed4789ae25e48773165e3c915839532bf0394444f006a9e3c3dc8277cab36c08",
+      "qqmusic/SKILL.md": "a63779fde9788f8a70e4aec8e1b709368e1a41d9004197e875e0b91682193de9",
+      "qqmusic/playlists.md": "c7e89a3379ff010ec8fa402a313cf439ba931470b45a6fa20264d60eda6e42f9",
+      "qqmusic/assistant.md": "2e4df4f5e82f2eac53d98648c22b96d5265799295287c99c07a229d9364e18e7",
+      "qqmusic/discover.md": "d43d7ef42ecf62cfe0676cb4a474eb338a1cea2238d05fbc5d831c2748581d5d"
+    }
+  },
+  "netease": {
+    "repo": "NetEase/skills",
+    "commit": "58ff0771d6977feb847d6bfe322280eec4bec004",
+    "files": [
+      ".gitignore",
+      "README.md",
+      "ncm-cli-setup/LICENSE.txt",
+      "ncm-cli-setup/SKILL.md",
+      "ncm-cli-setup/scripts/install_mpv.py",
+      "netease-music-assistant/LICENSE.txt",
+      "netease-music-assistant/SKILL.md",
+      "netease-music-cli/LICENSE.txt",
+      "netease-music-cli/SKILL.md"
+    ],
+    "sha256": {
+      "README.md": "f82e69e9de2700e8517cc6fcaa2a96e41bdad4e49c122a782f9ce39f145f32b0",
+      "netease-music-assistant/SKILL.md": "e11c46fe5541de280093278cca719c22332192e102306b0fc2672a84f2433716",
+      "netease-music-assistant/LICENSE.txt": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
+      "ncm-cli-setup/SKILL.md": "9d65fc3c9328a0c72f05f11437fbc1c6f30a74958d865952992c20fba425c072",
+      "ncm-cli-setup/LICENSE.txt": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
+      "netease-music-cli/SKILL.md": "199b5a0490e48e3435aeb6833cd2632e9702081165f58af90b661b2d088d71d6",
+      "netease-music-cli/LICENSE.txt": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
+      "ncm-cli-setup/scripts/install_mpv.py": "4898fdeccda6e55ac48ea2e21e2a3405c97277187e33d908cc8220612bc9af59"
+    }
+  }
+}

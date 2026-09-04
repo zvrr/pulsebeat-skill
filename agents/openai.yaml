@@ -1,4 +1,4 @@
 interface:
-  display_name: "PulseBeat 健康与音乐"
-  short_description: "本地分析 WHOOP 与三个音乐平台的个人趋势，保留数据来源和关联边界"
-  default_prompt: "使用 $pulsebeat 分析我的健康与音乐数据，生成有来源依据的个人解读。"
+  display_name: "PulseBeat · Health & Music / 健康与音乐"
+  short_description: "WHOOP + four music platforms / 四平台本地分析 · EN / 中文"
+  default_prompt: "Use $pulsebeat to analyze my health and music data and generate an HTML report in my system language."

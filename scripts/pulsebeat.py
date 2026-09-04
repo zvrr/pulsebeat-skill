@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """PulseBeat local client. Python standard library only; never calls an LLM."""
+from i18n import tr, activate, resolve
 import argparse, datetime as dt, hashlib, json, math, os, pathlib, statistics, sys, tempfile, time, urllib.request, urllib.error, urllib.parse, webbrowser
 ORIGIN = 'https://pulsebeat.tennisflow.top'
 HOME = pathlib.Path(os.environ.get('PULSEBEAT_HOME', str(pathlib.Path.home()/'.config'/'pulsebeat')))
@@ -41,17 +42,17 @@ def auth_start(args):
     if status!=200: raise ValueError(f'Authorization start: HTTP {status}')
     pair['started_at']=time.time();save(HOME/'pending.json',pair)
     url=ORIGIN+'/agent.html#code='+urllib.parse.quote(pair['user_code'])
-    print('确认码：'+pair['user_code']);print('请在浏览器核对账号和读取范围后批准：'+url)
+    print(tr('确认码：')+pair['user_code']);print(tr('请在浏览器核对账号和读取范围后批准：')+url)
     if args.open: webbrowser.open(url)
 
 def auth_complete(args):
     pair=read(HOME/'pending.json')
     if time.time()-pair['started_at']>600: raise ValueError('Pairing expired; run auth-start again')
     status,result=request(ORIGIN,'/api/agent/token',{'device_code':pair['device_code']})
-    if status==202: print('等待用户在 PulseBeat 网页批准。至少 5 秒后再运行 auth-complete。');return
+    if status==202: print(tr('等待用户在 PulseBeat 网页批准。至少 5 秒后再运行 auth-complete。'));return
     if status!=200: raise ValueError(f'Authorization incomplete: HTTP {status}; retry after 5 seconds for 429')
     save(HOME/'credential.json',result);(HOME/'pending.json').unlink(missing_ok=True)
-    print('已保存个人只读授权，凭证未输出。到期：'+dt.datetime.fromtimestamp(result['expires']/1000,TZ).isoformat())
+    print(tr('已保存个人只读授权，凭证未输出。到期：')+dt.datetime.fromtimestamp(result['expires']/1000,TZ).isoformat())
 
 def status_command(args):
     valid=False
@@ -75,12 +76,12 @@ def fetch_data(args):
             seen.add(cursor)
         else: raise ValueError('Pagination limit; export incomplete')
         result['sources'][kind]=rows
-    result['fetchCompletedAt']=now();result['consistency']='逐类分页导出，非跨接口事务快照；同步进行中时可能变化'
+    result['fetchCompletedAt']=now();result['consistency']=tr('逐类分页导出，非跨接口事务快照；同步进行中时可能变化')
     save(args.out,result);print('Saved: '+str(args.out));print(json.dumps({k:len(v) for k,v in result['sources'].items()}))
 
 def qq_collect(args):
     key=os.environ.get('QQMUSIC_API_KEY')
-    if not key: raise ValueError('QQMUSIC_API_KEY 未设置；在 QQ 官方技能授权页配置，不要在对话中粘贴密钥')
+    if not key: raise ValueError(tr('QQMUSIC_API_KEY 未设置；在 QQ 官方技能授权页配置，不要在对话中粘贴密钥'))
     date=dt.date.fromisoformat(args.date)
     if date>=dt.datetime.now(TZ).date(): raise ValueError('Choose a completed day, before today')
     params={'timeKey':'d','startTime':int(dt.datetime.combine(date,dt.time(),TZ).timestamp())}
@@ -103,7 +104,7 @@ def day_at(iso,offset):
         return dt.datetime.fromisoformat(iso.replace('Z','+00:00')).astimezone(dt.timezone(dt.timedelta(minutes=minutes))).date().isoformat()
     except (ValueError,TypeError,AttributeError): return None
 
-def analyze(export, qq_reports=(), netease=None):
+def analyze(export, qq_reports=(), netease=None, spotify=None):
     sources=export.get('sources',{});warnings=[];health={};music={};preferences={}
     sleeps={str(s.get('id')):s for s in sources.get('sleep',[]) if not s.get('nap')}
     cycles={str(c.get('id')):c for c in sources.get('cycle',[])}
@@ -112,11 +113,11 @@ def analyze(export, qq_reports=(), netease=None):
         sleep=sleeps.get(str(r.get('sleep_id')));score=safe_score(r)
         if not sleep or score.get('user_calibrating'): continue
         offset=sleep.get('timezone_offset');day=day_at(sleep.get('end'),offset)
-        if not day: warnings.append('有恢复记录缺少主睡眠结束时间或明确时区，未参与按日关联');continue
+        if not day: warnings.append(tr('有恢复记录缺少主睡眠结束时间或明确时区，未参与按日关联'));continue
         stages=safe_score(sleep).get('stage_summary',{})
         parts=[stages.get(k) for k in ['total_light_sleep_time_milli','total_slow_wave_sleep_time_milli','total_rem_sleep_time_milli']]
         row={'date':day,'timezone':offset,'recovery':score.get('recovery_score'),'hrv_ms':score.get('hrv_rmssd_milli'),'resting_hr':score.get('resting_heart_rate'),'sleep_hours':sum(parts)/3600000 if all(num(x) and x>=0 for x in parts) else None,'cycle_strain':safe_score(cycles.get(str(r.get('cycle_id')),{})).get('strain')}
-        if day in health: health[day]=None;warnings.append('同一天存在多个恢复记录，排除该日关联以避免任意选择')
+        if day in health: health[day]=None;warnings.append(tr('同一天存在多个恢复记录，排除该日关联以避免任意选择'))
         else: health[day]=row
     health={d:r for d,r in health.items() if r}
     for entry in sources.get('music:stats',[]):
@@ -131,7 +132,7 @@ def analyze(export, qq_reports=(), netease=None):
             songs=entries[-1].get('response',{}).get('data',{}).get('list',[])
             preferences['kugou_'+kind]=[{'song':s.get('song_name'),'artist':s.get('artist_name')} for s in songs[:10]]
     for report in qq_reports:
-        if report.get('source')!='qqmusic' or report.get('timeKey')!='d': warnings.append('QQ 非日报仅用于偏好解读，不参与日关联');continue
+        if report.get('source')!='qqmusic' or report.get('timeKey')!='d': warnings.append(tr('QQ 非日报仅用于偏好解读，不参与日关联'));continue
         resp=report.get('response',{});value=(resp.get('dayData') or {}).get('listenTime')
         if any(resp.get(k,0) not in (0,None) for k in ['ret','sub_ret']) or not num(value) or value<0: continue
         day=dt.date.fromisoformat(report['date']).isoformat()
@@ -140,7 +141,12 @@ def analyze(export, qq_reports=(), netease=None):
     if netease:
         if netease.get('source')!='netease' or netease.get('evidenceType')!='favorites' or not isinstance(netease.get('songs'),list): raise ValueError('NetEase export must follow references/providers.md favorites schema')
         preferences['netease_favorites']=netease['songs'][:50]
-        warnings.append('网易云为红心偏好快照；收藏时间与曲目长度不是实际收听时间或时长，不参与健康日关联')
+        warnings.append(tr('网易云为红心偏好快照；收藏时间与曲目长度不是实际收听时间或时长，不参与健康日关联'))
+    if spotify:
+        from spotify_import import validate
+        music['spotify']=validate(spotify)
+        preferences['spotify_recent']=[{k:r.get(k) for k in ('track','artist','endedAt')} for r in spotify['records'][-10:]]
+        warnings.append(tr('Spotify 按播放结束日汇总；不等于完整日曝光，不自动参与健康关联。'))
     metrics={}
     for metric in ['recovery','hrv_ms','resting_hr','sleep_hours','cycle_strain']:
         pairs=[(day,row[metric]) for day,row in sorted(health.items()) if num(row[metric])]
@@ -156,34 +162,36 @@ def analyze(export, qq_reports=(), netease=None):
             for date,row in sorted(health.items()):
                 previous=(dt.date.fromisoformat(date)-dt.timedelta(days=1)).isoformat();m=days.get(previous)
                 if m and m['verified'] and m['timezone']==row['timezone']=='+08:00' and previous<today and num(row[metric]): pairs.append((m['seconds']/60,row[metric],previous,date))
-            n=len(pairs);result={'provider':provider,'exposure':'前一自然日听歌分钟','outcome':metric,'n':n,'required_n':21,'status':'insufficient_data','spearman_r':None,'paired_dates':[{'music':p[2],'health':p[3]} for p in pairs]}
+            n=len(pairs);result={'provider':provider,'exposure':tr('前一自然日听歌分钟'),'outcome':metric,'n':n,'required_n':21,'status':'insufficient_data','spearman_r':None,'paired_dates':[{'music':p[2],'health':p[3]} for p in pairs]}
             if n>=21:
                 r=corr([p[0] for p in pairs],[p[1] for p in pairs]);result['spearman_r']=round(r,3) if r is not None else None;result['status']='exploratory_only' if r is not None else 'no_variation'
                 halves=[pairs[:n//2],pairs[n//2:]];result['split_half_r']=[None if (v:=corr([p[0] for p in part],[p[1] for p in part])) is None else round(v,3) for part in halves]
             associations.append(result)
-    warnings.extend(['仅为个人可穿戴与音乐记录描述，不用于诊断；相关不代表音乐导致恢复改变。','前一日音乐与醒来后的恢复配对；日统计仍无法证明音乐发生在睡前，不能识别具体曲目影响。','21 对只是产品最低展示门槛，并非统计显著性；时间自相关、训练、作息、饮酒、压力、旅行等未受控制，多个指标属于探索。','不把不同平台时长相加；缺失不填零，收藏/推荐不能当收听记录。','本地脚本不调用模型。Agent 撰写解读可能使用平台云模型；只读此汇总，不自动读取原始导出。'])
+    warnings.extend([tr('仅为个人可穿戴与音乐记录描述，不用于诊断；相关不代表音乐导致恢复改变。'),tr('前一日音乐与醒来后的恢复配对；日统计仍无法证明音乐发生在睡前，不能识别具体曲目影响。'),tr('21 对只是产品最低展示门槛，并非统计显著性；时间自相关、训练、作息、饮酒、压力、旅行等未受控制，多个指标属于探索。'),tr('不把不同平台时长相加；缺失不填零，收藏/推荐不能当收听记录。'),tr('本地脚本不调用模型。Agent 撰写解读可能使用平台云模型；只读此汇总，不自动读取原始导出。')])
     coverage={p:{'days':len(days),'range':[min(days),max(days)] if days else None,'mean_minutes':round(statistics.mean(x['seconds']/60 for x in days.values()),2) if days else None,'timezone_verified':all(x['verified'] for x in days.values())} for p,days in music.items()}
-    return {'schema':'pulsebeat.analysis.v1','generatedAt':now(),'sourceExportedAt':export.get('exportedAt'),'collectionFailures':export.get('localKugouFailures',export.get('status',{}).get('music',{}).get('failures',[]) if export.get('status',{}).get('music') else []),'sourceCounts':{k:len(v) for k,v in sources.items()},'healthMetrics':metrics,'healthDaily':list(health.values()),'musicDaily':{p:[{'date':d,**row} for d,row in sorted(days.items())] for p,days in music.items()},'musicCoverage':coverage,'providerAvailability':{p:('available' if p in music or (p=='netease' and netease) else 'not_connected_or_no_data') for p in ['kugou','qqmusic','netease']},'preferences':preferences,'associations':associations,'warnings':list(dict.fromkeys(warnings))}
+    return {'schema':'pulsebeat.analysis.v1','generatedAt':now(),'sourceExportedAt':export.get('exportedAt'),'collectionFailures':export.get('localKugouFailures',export.get('status',{}).get('music',{}).get('failures',[]) if export.get('status',{}).get('music') else []),'sourceCounts':{k:len(v) for k,v in sources.items()},'healthMetrics':metrics,'healthDaily':list(health.values()),'musicDaily':{p:[{'date':d,**row} for d,row in sorted(days.items())] for p,days in music.items()},'musicCoverage':coverage,'providerAvailability':{p:('available' if p in music or (p=='netease' and netease) else 'not_connected_or_no_data') for p in ['kugou','qqmusic','netease','spotify']},'preferences':preferences,'associations':associations,'warnings':list(dict.fromkeys(warnings))}
 
 def analyze_command(args):
+    language=activate(getattr(args,'lang','auto'))
     source=read(args.input)
     if args.kugou:
         local=read(args.kugou)
         for kind,entries in local.get('sources',{}).items():
             if kind.startswith('music:'): source.setdefault('sources',{})[kind]=entries
         source['localKugouFailures']=local.get('failures',[])
-    result=analyze(source,[read(p) for p in args.qq],read(args.netease) if args.netease else None)
+    result=analyze(source,[read(p) for p in args.qq],read(args.netease) if args.netease else None,read(args.spotify) if getattr(args,'spotify',None) else None)
+    result['language']=language
     result['sourceFileSha256']=hashlib.sha256(pathlib.Path(args.input).read_bytes()).hexdigest()
-    result['supplementalFileSha256']={str(p):hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in [*args.qq,args.netease,args.kugou] if p}
+    result['supplementalFileSha256']={str(p):hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in [*args.qq,args.netease,args.kugou,getattr(args,'spotify',None)] if p}
     out=pathlib.Path(args.out);save(out/'analysis.json',result)
-    labels={'recovery':'恢复分数','hrv_ms':'HRV（ms）','resting_hr':'静息心率','sleep_hours':'主睡眠小时','cycle_strain':'周期负荷'}
-    lines=['# PulseBeat 本地分析底稿','',f"生成：{result['generatedAt']}；数据导出：{result['sourceExportedAt']}",'','这是确定性统计底稿。AI 解读由 Agent 基于 analysis.json 另写 interpretation.md。','','| 指标 | 有效样本 | 均值 | 最新观测 |','|---|---:|---:|---|']
-    for k,v in result['healthMetrics'].items(): lines.append(f"| {labels[k]} | {v['n']} | {v['mean'] if v['mean'] is not None else '缺失'} | {v['latest'] or '缺失'} |")
-    lines+=['','## 音乐覆盖']
+    labels={'recovery':tr('恢复分数'),'hrv_ms':'HRV（ms）','resting_hr':tr('静息心率'),'sleep_hours':tr('主睡眠小时'),'cycle_strain':tr('周期负荷')}
+    lines=[tr('# PulseBeat 本地分析底稿'),'',f"{tr('生成：')}{result['generatedAt']}{tr('；数据导出：')}{result['sourceExportedAt']}",'',tr('这是确定性统计底稿。AI 解读由 Agent 基于 analysis.json 另写 interpretation.md。'),'',tr('| 指标 | 有效样本 | 均值 | 最新观测 |'),'|---|---:|---:|---|']
+    for k,v in result['healthMetrics'].items(): lines.append(f"| {labels[k]} | {v['n']} | {v['mean'] if v['mean'] is not None else tr('缺失')} | {v['latest'] or tr('缺失')} |")
+    lines+=['',tr('## 音乐覆盖')]
     for p,v in result['providerAvailability'].items(): lines.append(f'- {p}: {v}；{result["musicCoverage"].get(p,{})}')
-    lines+=['','## 可检验的关联']
-    for a in result['associations']: lines.append(f"- {a['provider']} 前一日音乐 → {labels[a['outcome']]}：{a['n']} 对，{a['status']}，Spearman={a['spearman_r']}。")
-    lines+=['','## 解释边界']+['- '+w for w in result['warnings']]
+    lines+=['',tr('## 可检验的关联')]
+    for a in result['associations']: lines.append(f"- {a['provider']}{tr(' 前一日音乐 → ')}{labels[a['outcome']]}：{a['n']}{tr(' 对，')}{a['status']}，Spearman={a['spearman_r']}。")
+    lines+=['',tr('## 解释边界')]+['- '+w for w in result['warnings']]
     (out/'report.md').write_text('\n'.join(lines)+'\n',encoding='utf-8');os.chmod(out/'report.md',0o600)
     print('Local analysis: '+str(out/'analysis.json'));print('Statistics report: '+str(out/'report.md'))
 
@@ -203,10 +211,15 @@ def main():
     a=sub.add_parser('status');a.set_defaults(fn=status_command)
     a=sub.add_parser('fetch');a.add_argument('--out',type=pathlib.Path,required=True);a.set_defaults(fn=fetch_data)
     a=sub.add_parser('qq-report');a.add_argument('--date',required=True);a.add_argument('--out',type=pathlib.Path,required=True);a.add_argument('--confirm-beijing-day',action='store_true',help='Only after the user/provider confirms daily timezone');a.set_defaults(fn=qq_collect)
-    a=sub.add_parser('analyze');a.add_argument('--input',required=True);a.add_argument('--out',required=True);a.add_argument('--qq',nargs='*',default=[]);a.add_argument('--netease');a.add_argument('--kugou');a.set_defaults(fn=analyze_command)
-    a=sub.add_parser('sync');a.add_argument('--directory',required=True);a.add_argument('--days',type=int,choices=range(1,31),default=7);group=a.add_mutually_exclusive_group();group.add_argument('--refresh-kugou',action='store_true');group.add_argument('--kugou-file');a.add_argument('--qq',nargs='*',default=[]);a.add_argument('--netease');a.set_defaults(fn=sync_command)
+    a=sub.add_parser('analyze');a.add_argument('--input',required=True);a.add_argument('--out',required=True);a.add_argument('--qq',nargs='*',default=[]);a.add_argument('--netease');a.add_argument('--spotify');a.add_argument('--kugou');a.set_defaults(fn=analyze_command)
+    a=sub.add_parser('sync');a.add_argument('--directory',required=True);a.add_argument('--days',type=int,choices=range(1,31),default=7);group=a.add_mutually_exclusive_group();group.add_argument('--refresh-kugou',action='store_true');group.add_argument('--kugou-file');a.add_argument('--qq',nargs='*',default=[]);a.add_argument('--netease');a.add_argument('--spotify');a.set_defaults(fn=sync_command)
     a=sub.add_parser('html');a.add_argument('--analysis',required=True);a.add_argument('--interpretation',required=True);a.add_argument('--insights');a.add_argument('--out',required=True);a.set_defaults(fn=html_command)
+    from spotify_import import command as spotify_command
+    a=sub.add_parser('spotify-import');a.add_argument('--files',nargs='+',required=True);a.add_argument('--timezone',required=True);a.add_argument('--out',required=True);a.set_defaults(fn=spotify_command)
+    a=sub.add_parser('locale');a.set_defaults(fn=lambda args: print(json.dumps({'language':resolve(args.lang)})))
+    for parser in sub.choices.values(): parser.add_argument('--lang',choices=['auto','en','zh','zh-CN'],default='auto')
     args=p.parse_args()
+    activate(args.lang)
     try: args.fn(args)
     except (ValueError,KeyError,OSError,urllib.error.URLError) as e:
         print('PulseBeat: '+(str(e) if isinstance(e,ValueError) else type(e).__name__+'; check local configuration or network'),file=sys.stderr);sys.exit(1)

@@ -1,11 +1,19 @@
 ---
 name: pulsebeat
-description: 解读个人 WHOOP 健康与酷狗、QQ 音乐、网易云音乐数据，发现有证据的趋势和探索性关联。通过 PulseBeat 网页完成个人只读授权，在本地持续保存数据、计算并生成可离线打开的 HTML 健康与音乐报告。用户提到 PulseBeat、健康与听歌关联、恢复/睡眠与音乐、个人节奏分析时使用；可组合各平台官方音乐 Skill。
+description: Analyze personal WHOOP health and Kugou, QQ Music, NetEase Cloud Music and Spotify data. 解读个人 WHOOP 健康与四个音乐平台数据，发现有证据的趋势和探索性关联。通过 PulseBeat 网页完成个人只读授权，在本地持续保存数据、计算并生成可离线打开的 HTML 健康与音乐报告。用户提到 PulseBeat、健康与听歌关联、恢复/睡眠与音乐、个人节奏分析时使用；可组合各平台官方音乐 Skill。
 ---
 
 # PulseBeat 个人健康 × 音乐
 
 把自己当作用户的个人数据分析助手。先取得真实数据并计算，再解读。支持 Codex、WorkBuddy 及可以执行 Python 的 Agent。所有脚本相对本 SKILL.md 所在目录解析；不要假设当前工作目录是项目仓库。
+
+## 语言 / Language
+
+首先运行 `python3 <skill>/scripts/pulsebeat.py locale`。默认读取电脑的界面语言（macOS AppleLanguages / Windows UI culture / Linux locale），中文使用 zh-CN，英文及其他语言回退 en。用户明确要求的语言优先，可传 `--lang en` / `--lang zh-CN` 或设置 `PULSEBEAT_LANG`。语言不改变统计时区。
+
+If the selected language is English, read [English workflow](references/workflow.en.md) and follow it. All user-facing explanations, interpretation.md and insights.json must use that language; preserve original song and artist names. Pass the same --lang to analyze and html, and put language in insights.json. The renderer translates interface labels, not user prose: rewrite the interpretation when changing language.
+
+中文模式下，用户回复、interpretation.md、insights.json 均用中文；歌名、艺人名保留原文。报告和分享卡跟随同一语言。
 
 ## 用户无需部署服务
 
@@ -23,7 +31,7 @@ description: 解读个人 WHOOP 健康与酷狗、QQ 音乐、网易云音乐数
 
 ## 执行流程
 
-1. 确定所需期间，默认最近可用数据；用户没指定音乐平台时先用 PulseBeat 中已有酷狗数据，报告另外两平台的缺失。读取 [平台接入](references/providers.md)，按用户实际选择调用官方音乐 Skill。
+1. 确定所需期间，默认最近可用数据；用户没指定音乐平台时先用 PulseBeat 中已有酷狗数据，报告其他平台的缺失。读取 [平台接入](references/providers.md)，按用户实际选择读取随包官方音乐 Skill：QQ 为 `vendor/qqmusic/qqmusic/SKILL.md`；网易为 `vendor/netease/netease-music-cli/SKILL.md` 与 `vendor/netease/netease-music-assistant/SKILL.md`。先遵循本技能的隐私边界：不执行上游打印/索要密钥步骤，不把健康请求路由到音乐远端 AI，不为普通用户创建开发应用，不自动播放、建单或定时推送。原版仅作选定音乐操作参考，详见 THIRD_PARTY_NOTICES.md。Spotify 读取 [接入说明](references/spotify.md)，不冒称有官方个人音乐源码 Skill。
 2. `python3 <skill>/scripts/pulsebeat.py status` 只显示配置是否存在，不显示密钥。首次或过期时运行：
 
    ```sh
@@ -37,16 +45,16 @@ description: 解读个人 WHOOP 健康与酷狗、QQ 音乐、网易云音乐数
    python3 <skill>/scripts/pulsebeat.py sync --directory <private-output>/library
    ```
 
-   用户希望更新酷狗且已授权时加 `--refresh-kugou --days 7`；已有本机导出可用 `--kugou-file <file>`，避免重复请求。QQ 日报、网易红心文件可加 `--qq <day1.json> <day2.json>` 和 `--netease <favorites.json>`。
+   用户希望更新酷狗且已授权时加 `--refresh-kugou --days 7`；已有本机导出可用 `--kugou-file <file>`，避免重复请求。Spotify 官方扩展听歌历史可先用 `spotify-import --files <files...> --timezone <IANA时区> --out <private-output>/spotify.json` 在本地导入，时区依据本人确认，不能根据界面语言猜测；然后加 `--spotify <file>`。QQ 日报、网易红心文件可加 `--qq <day1.json> <day2.json>` 和 `--netease <favorites.json>`。
 
    `library/current.json` 是当前健康与累计音乐数据；`snapshots/` 保存每次原始结果；`sync.json` 记录来源、文件路径、成功与缺失。健康以服务当前完整分页快照为准；成功的音乐日期按来源采集时间更新并保留本地历史，不因接口30天窗口或暂时失败丢掉旧数据。文件保留原始采集时间，缓存不冒充新鲜数据；切换用户必须使用独立目录。若某平台同步失败，明确 partial，继续分析可用数据。
-4. 读取 `sync.json`，将其中已保存 QQ/网易路径传入分析（没有就省略）：
+4. 读取 `sync.json`，将其中已保存 QQ/网易/Spotify 路径传入分析（没有就省略）：
 
    ```sh
    python3 <skill>/scripts/pulsebeat.py analyze --input <private-output>/library/current.json --out <private-output>/report
    ```
 
-   需要时追加 `--qq`、`--netease` 参数。不要用示例填补缺失平台。下载不含身份 profile/body 或 WHOOP OAuth 密钥；分页失败保留上次成功结果并报错，不宣称本轮已更新。`fetch --out <file>` 仍可用于单次导出。
+   需要时追加 `--qq`、`--netease`、`--spotify` 参数。不要用示例填补缺失平台。下载不含身份 profile/body 或 WHOOP OAuth 密钥；分页失败保留上次成功结果并报错，不宣称本轮已更新。`fetch --out <file>` 仍可用于单次导出。
 5. 读取 `analysis.json`，对照 [分析协议](references/analysis.md)，由当前 Agent 完成 `interpretation.md`。根据 [HTML 模板规范](references/report-design.md) 生成简洁的 insights.json，再**必须生成本地 HTML**，不把统计底稿当作 AI 解读：
 
    ```sh

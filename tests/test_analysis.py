@@ -1,4 +1,5 @@
-import datetime as dt, importlib.util, pathlib, unittest
+import datetime as dt, importlib.util, pathlib, unittest, sys
+sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[1]/'scripts'))
 spec=importlib.util.spec_from_file_location('pulsebeat',pathlib.Path(__file__).resolve().parents[1]/'scripts/pulsebeat.py');pb=importlib.util.module_from_spec(spec);spec.loader.exec_module(pb)
 def fixture(n):
     source={k:[] for k in ['cycle','recovery','sleep','music:stats']}
