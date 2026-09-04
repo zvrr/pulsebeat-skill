@@ -10,6 +10,26 @@ PulseBeat 提供账号授权和数据读取；本 Skill 在本机保存历史、
 
 需要 Python 3.10+ 和可以执行本地 Python 的 Agent。统计和报告脚本仅使用 Python 标准库。
 
+### 使用 npx 安装（推荐）
+
+先安装 Node.js（包含 npm/npx）。命令是 `npx skills add`，其中 **skills 是复数**。
+
+```sh
+npx skills add zvrr/pulsebeat-skill --skill pulsebeat
+```
+
+按提示选择 Agent 与安装范围。指定全局安装到 Codex：
+
+```sh
+npx skills add zvrr/pulsebeat-skill --skill pulsebeat --agent codex --global
+```
+
+`--skill pulsebeat` 选择主技能，随目录包含已打包的音乐 Skill 和报告模板。省略 `--global` 时安装到当前项目。安装后重新开启 Agent 任务以加载；WorkBuddy 可按安装器实际提供的 Agent 列表选择，不在列表中时使用下方本地导入方式。
+
+命令参数依据：[Skills CLI 官方说明](https://github.com/vercel-labs/skills#install-a-skill)。
+
+### 手动安装
+
 Codex：
 
 ```sh

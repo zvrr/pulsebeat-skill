@@ -10,6 +10,26 @@ PulseBeat hosts WHOOP authorization and data access. Users do **not** deploy Clo
 
 Requires Python 3.10+ and an Agent that can execute local Python. Core scripts use the standard library only. Spotify imports also need an installed IANA timezone database; the command reports if one is unavailable.
 
+### Install with npx (recommended)
+
+Install Node.js, which includes npm/npx. The command is `npx skills add` — **skills is plural**.
+
+```sh
+npx skills add zvrr/pulsebeat-skill --skill pulsebeat
+```
+
+Follow the prompts to choose an Agent and installation scope. To install globally for Codex:
+
+```sh
+npx skills add zvrr/pulsebeat-skill --skill pulsebeat --agent codex --global
+```
+
+`--skill pulsebeat` selects the main Skill, including its bundled music Skills and report templates. Without `--global`, installation is scoped to the current project. Start a new Agent task after installation. For WorkBuddy, select it if offered by the installer; otherwise use the local import workflow below.
+
+Command reference: [official Skills CLI documentation](https://github.com/vercel-labs/skills#install-a-skill).
+
+### Manual installation
+
 ```sh
 git clone https://github.com/zvrr/pulsebeat-skill.git ~/.codex/skills/pulsebeat
 ```
