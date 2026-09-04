@@ -1,0 +1,20 @@
+#!/usr/bin/env python3
+"""Reproducible synthetic report preview. Contains no person's health data."""
+import datetime as dt, json, math, pathlib, sys, argparse
+ROOT=pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT/'scripts'))
+from pulsebeat import analyze_command,save
+from report_html import build
+out=ROOT/'data/template-demo';out.mkdir(parents=True,exist_ok=True)
+sources={k:[] for k in ['cycle','recovery','sleep','music:stats']}
+for i in range(28):
+    date=dt.date(2026,1,2)+dt.timedelta(days=i);previous=date-dt.timedelta(days=1);hours=6.5+.7*math.sin(i*.5)
+    sources['cycle'].append({'id':i,'score_state':'SCORED','score':{'strain':8+2*math.cos(i)}})
+    sources['sleep'].append({'id':str(i),'end':date.isoformat()+'T07:00:00+08:00','timezone_offset':'+08:00','nap':False,'score_state':'SCORED','score':{'stage_summary':{'total_light_sleep_time_milli':hours*.55*3600000,'total_slow_wave_sleep_time_milli':hours*.25*3600000,'total_rem_sleep_time_milli':hours*.2*3600000}}})
+    sources['recovery'].append({'cycle_id':i,'sleep_id':str(i),'score_state':'SCORED','score':{'recovery_score':round(62+13*math.sin(i*.7)),'hrv_rmssd_milli':40+7*math.cos(i*.4),'resting_heart_rate':58+3*math.sin(i*.8)}})
+    sources['music:stats'].append({'date':previous.strftime('%Y%m%d'),'dateType':0,'response':{'errcode':0,'data':{'listen_duration':round(1200+700*math.sin(i*.31))}}})
+save(out/'export.json',{'exportedAt':'2026-01-30T00:00:00Z','evidenceMode':'SYNTHETIC_DEMO','sources':sources})
+analyze_command(argparse.Namespace(input=out/'export.json',out=out,qq=[],netease=None,kugou=None))
+note=out/'interpretation.md';note.write_text('# 合成数据演示，非真实健康报告\n\n本页所有数值由确定性公式生成，仅用于验证模板的多日图表、比较和排版。不代表任何人的身体状态，也不能用于医学或健康判断。\n\n## 设计说明\n\n先看结论，再看证据。实际使用时，Agent 必须基于授权数据生成与之对应的个人解读。\n')
+info={'headline':'合成数据演示：看见自己的节奏。','summary':'这是一份完全由公式生成的模板演示，不包含任何人的健康记录。用它查看恢复概览、每日趋势、样本边界和分享版式。真实报告必须依据个人授权数据。','findings':[{'title':'结论先行','detail':'首屏明确展示最重要的发现；这些示例文案仅描述设计。','evidence':'SYNTHETIC / 非真实记录'},{'title':'比较有刻度','detail':'每项趋势保留独立单位，日期和缺失情况可以复查。','evidence':'28天合成观测'},{'title':'分享有边界','detail':'分享卡只保留精选摘要，不嵌入原始数据或身份字段。','evidence':'本地生成，不自动发布'}],'next_steps':[{'title':'替换为授权的个人数据','detail':'实际分析时重新同步、计算，再由 Agent 撰写真实解读。'},{'title':'检查证据是否足够','detail':'合成数据只能验证展示，不能证明真实健康关联。'}]}
+save(out/'insights.json',info);build(argparse.Namespace(analysis=out/'analysis.json',interpretation=note,insights=out/'insights.json',out=out/'index.html'))
