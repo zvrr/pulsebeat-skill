@@ -127,5 +127,6 @@
   "Spotify 按播放结束日汇总；不等于完整日曝光，不自动参与健康关联。": "Spotify totals use stream end dates, not complete daily exposure; no automatic health associations.",
   " · 按播放结束日统计，不自动关联健康": " · By stream end date; no automatic health pairing",
   "展开指标与趋势，核对同一段节奏": "Explore the metrics behind this shared rhythm",
-  "展开这段日子的歌曲、偏好与场景线索": "Explore the songs, preferences and context of these days"
+  "展开这段日子的歌曲、偏好与场景线索": "Explore the songs, preferences and context of these days",
+  "查看分享图集 ↗": "View share series ↗"
 }

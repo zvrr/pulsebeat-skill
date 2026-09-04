@@ -61,7 +61,7 @@ If the selected language is English, read [English workflow](references/workflow
    python3 <skill>/scripts/pulsebeat.py html --analysis <private-output>/report/analysis.json --interpretation <private-output>/report/interpretation.md --insights <private-output>/report/insights.json --out <private-output>/report/index.html
    ```
 
-   打开并检查 `index.html`，将它作为首要交付。HTML 包含 AI 解读、健康指标、音乐覆盖、关联样本和证据边界，无外部资源或联网请求，可离线查看；支持浏览器打印/PDF。每次同步后都重新计算并更新 AI 解读，避免旧解读套用新数据。HTML 是分析任务完成的必要产物，不能停在 JSON/Markdown 底稿；只有用户明确要求仅导出数据时可省略。模板自动生成可下载的精选 SVG 分享卡，未经用户要求不发布或发送。
+   打开并检查 `index.html`，将它作为首要交付。HTML 包含 AI 解读、健康指标、音乐覆盖、关联样本和证据边界，无外部资源或联网请求，可离线查看；支持浏览器打印/PDF。每次同步后都重新计算并更新 AI 解读，避免旧解读套用新数据。HTML 是分析任务完成的必要产物，不能停在 JSON/Markdown 底稿；只有用户明确要求仅导出数据时可省略。模板自动生成六页分享图集 HTML；用户要求分享图片时，按 references/share-series.md 导出六张 PNG 与 ZIP，旧 SVG 仅作兼容。未经用户要求不发布或发送。
 6. 最后给出 HTML 报告路径、2–3 条最有证据的发现、尚缺的覆盖。用户明确要求推荐时，可通过音乐 Skill 用音乐偏好或中性场景（如“安静器乐”）找候选；歌曲不是医疗干预，创建/修改歌单需要用户的相应请求。
 
 ## AI 解读交付结构
@@ -80,3 +80,8 @@ When musicPortraits are available, read [Music stories](references/music-story.m
 
 
 Integrated narrative: write one headline and summary for the shared life window, not separate music and health introductions. Add `rhythmNotes` to insights.json, keyed by `provider:health-date`, explaining each verified prior-day-music / next-day-health pair. Only use associations.paired_dates; do not invent overlaps or imply causation. The main report combines music minutes, visible tracks, next-day recovery, sleep and HRV in each date card. Full music portraits and metric trends remain expandable evidence. 中文报告同样以共同时间线组织综合解读，音乐画像与健康趋势作为可展开的支持证据。
+
+
+### Share image series / 分享图片系列
+
+The HTML share entry opens six 1080 × 1440 editorial cards: body/music conclusion, verified daily comparison, preferences, representative songs, scenes and next observations. When asked for share images, follow [local PNG export](references/share-series.md) to render and verify all six PNGs plus ZIP; HTML alone does not complete the image request. 本地图片图集按小红书竖版阅读组织，中英文跟随报告，不自动发布。

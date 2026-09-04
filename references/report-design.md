@@ -12,7 +12,7 @@
 4. 日趋势按实际日期绘图，不跨缺失日连线，不将不同单位放在同一纵轴。图表范围7/30/全部可切换；该控件只过滤图表，不改变AI结论或上方均值。
 5. 关联区显示实际配对数、最低展示门槛、平台和统计边界。各平台分开，不能叠加伪造音乐总时长。
 6. 两项具体下一步观察；完整解读与方法细节默认折叠。
-7. 自动产生精选SVG分享卡与打印/PDF排版；不自动发送、发布或上传。分享卡只保留标题、日期、选定健康数值和配对提示，不嵌入原始记录、身份、文件路径或来源哈希。它仍含个人健康摘要，用户决定是否分享。
+7. 自动产生六页分享图集 HTML 与打印/PDF排版；用户需要图片时导出六张 PNG 和 ZIP，详见 share-series.md。图集包含精选健康/听歌摘要、偏好和场景解释，不嵌入原始导出、身份或凭证，不自动发送、发布或上传。旧 SVG 保留兼容。
 
 ## Agent 应提供的结构化结论
 
@@ -36,7 +36,7 @@
 
     python3 <skill>/scripts/pulsebeat.py html --analysis <analysis.json> --interpretation <interpretation.md> --insights <insights.json> --out <report-directory>/index.html
 
-缺少或空白的 interpretation.md 会报错；HTML 是任务完成的必要产物。输出 index.html、index-share.svg、index.manifest.json。清晰命名归档，保留 JSON/Markdown 供复查，但首先交付 HTML。在桌面和窄屏检查结论、图表、缺失提示与按钮。保持离线可用，不引入 CDN 或分析脚本。
+缺少或空白的 interpretation.md 会报错；HTML 是任务完成的必要产物。输出 index.html、index-share-series/index.html、index-share.svg、index.manifest.json；需要图片时另导出 PNG 与 ZIP。清晰命名归档，保留 JSON/Markdown 供复查，但首先交付 HTML。在桌面和窄屏检查结论、图表、缺失提示与按钮。保持离线可用，不引入 CDN 或分析脚本。
 
 设计参考：
 https://www.whoop.com/us/en/

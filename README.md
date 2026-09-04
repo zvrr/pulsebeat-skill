@@ -56,7 +56,7 @@ WorkBuddy 或其他 Agent：克隆仓库，将包含 `SKILL.md` 的整个文件�
 
 ## 报告与模板
 
-每次分析必须交付 `index.html`，同时生成精选 `index-share.svg` 分享卡及报告清单。报告采用深色结论首屏、恢复圆环、浅色指标卡、独立刻度的趋势图，支持时间窗口切换、样本说明与指标比较。HTML 不依赖 CDN，可以离线打开、打印或保存为 PDF。
+每次分析必须交付 `index.html`，同时生成六页 `index-share-series/index.html` 分享图集及报告清单；可导出 PNG 与 ZIP，旧 `index-share.svg` 保留兼容。报告采用深色结论首屏、恢复圆环、浅色指标卡、独立刻度的趋势图，支持时间窗口切换、样本说明与指标比较。HTML 不依赖 CDN，可以离线打开、打印或保存为 PDF。
 
 模板在 `assets/`，渲染器在 `scripts/report_html.py`；结构化解读格式见 [报告设计规范](references/report-design.md)。真实报告必须使用真实授权数据，不能用演示数据补齐缺失记录。
 
@@ -138,3 +138,8 @@ python3 -m unittest discover -s tests -p 'test_*.py'
 The offline HTML includes an editorial record wall, listening calendar, weekday comparison, genre/language appearances and returned time-bin heatmap. Agent-written chapters interpret repeats, preferences and possible contexts with explicit evidence. Verified public track descriptions and locally cached artwork can be embedded; personal reports are never included in this repository. English and Chinese are supported. See [music-story workflow](references/music-story.md).
 
 报告加入唱片封面墙、听歌日历、每周节奏、曲风与语言分布、时段热图；由 Agent 解读回听偏好与场景线索，并标注事实与假设。内置 PulseBeat 矢量 Logo 与离线 favicon，使用黑绿主色和暖橙音乐强调色。
+
+
+### Share image series / 分享图片系列
+
+The HTML share entry opens six 1080 × 1440 editorial cards: body/music conclusion, verified daily comparison, preferences, representative songs, scenes and next observations. When asked for share images, follow [local PNG export](references/share-series.md) to render and verify all six PNGs plus ZIP; HTML alone does not complete the image request. 本地图片图集按小红书竖版阅读组织，中英文跟随报告，不自动发布。

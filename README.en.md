@@ -80,7 +80,7 @@ Pass --qq, --netease and --spotify supplemental files when available; use paths 
 python3 scripts/pulsebeat.py html --analysis ~/PulseBeat-private/report/analysis.json --interpretation ~/PulseBeat-private/report/interpretation.md --insights ~/PulseBeat-private/report/insights.json --out ~/PulseBeat-private/report/index.html --lang en
 ```
 
-Every analysis must deliver index.html, with index-share.svg and a provenance manifest. The template features a dark conclusion panel, recovery ring, metric comparisons and independent trend scales. It uses no remote fonts or chart libraries and can be printed or saved as PDF.
+Every analysis must deliver index.html, with a six-page index-share-series/index.html and a provenance manifest. Export PNGs and ZIP for image requests; index-share.svg remains for compatibility. The template features a dark conclusion panel, recovery ring, metric comparisons and independent trend scales. It uses no remote fonts or chart libraries and can be printed or saved as PDF.
 
 For a preview without an account, run demo_report.py above and open data/template-demo/en/index.html or data/template-demo/zh-CN/index.html. These are clearly labeled, formula-generated examples, not personal health records. Generated data is Git-ignored.
 
@@ -112,3 +112,8 @@ See [English Agent workflow](references/workflow.en.md), [SKILL.md](SKILL.md) an
 The offline HTML includes an editorial record wall, listening calendar, weekday comparison, genre/language appearances and returned time-bin heatmap. Agent-written chapters interpret repeats, preferences and possible contexts with explicit evidence. Verified public track descriptions and locally cached artwork can be embedded; personal reports are never included in this repository. English and Chinese are supported. See [music-story workflow](references/music-story.md).
 
 报告加入唱片封面墙、听歌日历、每周节奏、曲风与语言分布、时段热图；由 Agent 解读回听偏好与场景线索，并标注事实与假设。内置 PulseBeat 矢量 Logo 与离线 favicon，使用黑绿主色和暖橙音乐强调色。
+
+
+### Share image series / 分享图片系列
+
+The HTML share entry opens six 1080 × 1440 editorial cards: body/music conclusion, verified daily comparison, preferences, representative songs, scenes and next observations. When asked for share images, follow [local PNG export](references/share-series.md) to render and verify all six PNGs plus ZIP; HTML alone does not complete the image request. 本地图片图集按小红书竖版阅读组织，中英文跟随报告，不自动发布。
