@@ -50,3 +50,6 @@ https://www.apple.com/health/
 ## Rich listening interpretation / 丰富听歌解读
 
 When musicPortraits are available, read [Music stories](music-story.md) and write musicStories in insights.json before generating the required HTML. Include meaningful preference and scene interpretations, source-bounded comparisons, and verified public track context/artwork where available. 使用实际覆盖区间，写出回听、口味与场景线索，不以原始数据或泛泛的音乐人格标签替代解读。
+
+
+Integrated narrative: write one headline and summary for the shared life window, not separate music and health introductions. Add `rhythmNotes` to insights.json, keyed by `provider:health-date`, explaining each verified prior-day-music / next-day-health pair. Only use associations.paired_dates; do not invent overlaps or imply causation. The main report combines music minutes, visible tracks, next-day recovery, sleep and HRV in each date card. Full music portraits and metric trends remain expandable evidence. 中文报告同样以共同时间线组织综合解读，音乐画像与健康趋势作为可展开的支持证据。

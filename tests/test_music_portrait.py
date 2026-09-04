@@ -23,4 +23,14 @@ class MusicTests(unittest.TestCase):
   p=portrait({'sources':{'music:stats':[day('20260101',60)]}})
   p['kugou']['tracks'][0]['title']='<script>alert(1)</script>'
   out=render({'musicPortraits':p},{},{});self.assertNotIn('<script>',out);self.assertIn('&lt;script&gt;',out)
+class RhythmTests(unittest.TestCase):
+ def test_only_verified_pairs_appear(self):
+  from rhythm_html import render
+  from i18n import activate
+  activate('en')
+  data={'healthDaily':[{'date':'2026-01-02','recovery':50,'sleep_hours':7}], 'musicDaily':{'kugou':[{'date':'2026-01-01','seconds':60}]},'associations':[]}
+  self.assertNotIn('rhythm-day',render(data,{}))
+  data['associations']=[{'provider':'kugou','outcome':'recovery','paired_dates':[{'music':'2026-01-01','health':'2026-01-02'}]}]
+  out=render(data,{'rhythmNotes':{'kugou:2026-01-02':'<script>bad</script>'}})
+  self.assertIn('Next-day recovery',out);self.assertIn('&lt;script&gt;',out);self.assertNotIn('<script>',out)
 if __name__=='__main__':unittest.main()
