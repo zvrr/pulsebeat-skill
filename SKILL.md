@@ -72,3 +72,8 @@ If the selected language is English, read [English workflow](references/workflow
 - **下一步观察**：1–2 个可执行的记录问题，如固定记录听歌时间、训练/作息和主观感受；缺样本就继续积累。不要虚构“已经证实”的建议。
 
 此 Skill 的统计程序可离线重跑。所有平台身份独立；新增用户仍通过邀请加入 PulseBeat，再授权自己的 WHOOP 与音乐账号。
+
+
+## Rich listening interpretation / 丰富听歌解读
+
+When musicPortraits are available, read [Music stories](references/music-story.md) and write musicStories in insights.json before generating the required HTML. Include meaningful preference and scene interpretations, source-bounded comparisons, and verified public track context/artwork where available. 使用实际覆盖区间，写出回听、口味与场景线索，不以原始数据或泛泛的音乐人格标签替代解读。

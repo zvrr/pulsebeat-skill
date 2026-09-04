@@ -45,3 +45,8 @@ https://www.apple.com/health/
 ## Language / 语言
 
 先运行 locale，insights.json 增加 language（en 或 zh-CN），interpretation.md 与结构化解读使用同一语言。analyze 和 html 传入同一个 --lang。渲染器只翻译界面文案，不翻译用户的 AI 解读；切换语言须由 Agent 重写解读。模板为同一套版式，HTML lang 属性及分享卡同步变化。上游原始字段、歌名和艺人名不翻译。
+
+
+## Rich listening interpretation / 丰富听歌解读
+
+When musicPortraits are available, read [Music stories](music-story.md) and write musicStories in insights.json before generating the required HTML. Include meaningful preference and scene interpretations, source-bounded comparisons, and verified public track context/artwork where available. 使用实际覆盖区间，写出回听、口味与场景线索，不以原始数据或泛泛的音乐人格标签替代解读。

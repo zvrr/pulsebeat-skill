@@ -31,7 +31,7 @@ class LocalTests(unittest.TestCase):
     def test_html_external_content_not_executed(self):
         payload='<script>alert(1)</script><img src="https://attacker.invalid">'
         out=report_html.render({'warnings':[payload]},'# Report\n'+payload+'\n| h | v |\n|---|---|\n| field | **bold** |')
-        self.assertEqual(out.count('<script>'),1);self.assertNotIn('<script>alert(1)',out);self.assertNotIn('<img ',out);self.assertIn('&lt;script&gt;',out);self.assertIn("default-src 'none'",out);self.assertIn('<strong>bold</strong>',out)
+        self.assertEqual(out.count('<script>'),1);self.assertNotIn('<script>alert(1)',out);self.assertNotIn('<img src=x',out);self.assertNotIn('<img src=\"https://',out);self.assertIn('&lt;script&gt;',out);self.assertIn("default-src 'none'",out);self.assertIn('<strong>bold</strong>',out)
     def test_template_trusted_script_hash_and_gap(self):
         import base64, hashlib, re
         out=report_html.render({},'A real interpretation')

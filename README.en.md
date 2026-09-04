@@ -1,3 +1,5 @@
+![PulseBeat](assets/brand/logo-light.svg)
+
 # PulseBeat Skill
 
 [简体中文](README.md) · English
@@ -103,3 +105,10 @@ python3 -m unittest discover -s tests -p 'test_*.py'
 ```
 
 See [English Agent workflow](references/workflow.en.md), [SKILL.md](SKILL.md) and the bundled source notices for integration details.
+
+
+### Music stories & visual identity / 音乐叙事与视觉识别
+
+The offline HTML includes an editorial record wall, listening calendar, weekday comparison, genre/language appearances and returned time-bin heatmap. Agent-written chapters interpret repeats, preferences and possible contexts with explicit evidence. Verified public track descriptions and locally cached artwork can be embedded; personal reports are never included in this repository. English and Chinese are supported. See [music-story workflow](references/music-story.md).
+
+报告加入唱片封面墙、听歌日历、每周节奏、曲风与语言分布、时段热图；由 Agent 解读回听偏好与场景线索，并标注事实与假设。内置 PulseBeat 矢量 Logo 与离线 favicon，使用黑绿主色和暖橙音乐强调色。
