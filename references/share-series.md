@@ -23,3 +23,6 @@ If Playwright is unavailable, install it in a private tool directory with `npm i
 The exporter blocks HTTP(S) requests, waits for fonts/images, rejects vertical text overflow, renders six PNGs and packages `share-images.zip`. A successful `manifest.json` has `rendered: true` and six filenames. Review all six images for clipping and legibility; share only local paths with the user. Updating the HTML resets rendered status and requires a fresh PNG export before delivery; old files must not be claimed as current. These are personal health/listening summaries: no automatic social publishing, repository upload, identity details or credentials. Artwork rights remain with their owners.
 
 中文：用户要求分享图时，必须实际导出 PNG 图组和 ZIP，不能仅交付 HTML 或旧版单张 SVG。每张一个主题，保留关键日期、样本与事实/假设标记；确认内容没有溢出后再交付。生成本地图片不等于授权发布到小红书。
+
+
+After export, index.html is a responsive offline viewer with thumbnails, previous/next controls, arrow keys, touch swipe, fit/100% zoom, current-PNG download and all-images ZIP. cards.html preserves the fixed-size render source; re-export reads that source rather than screenshotting the viewer. To refresh only the viewer without changing PNGs, run `python3 <skill>/scripts/share_viewer.py <share-directory>`. 中文：浏览页自动适应窗口；点击缩略图选图，按方向键或手机左右滑动切换；100% 查看细节，下载始终保留原始分辨率。
